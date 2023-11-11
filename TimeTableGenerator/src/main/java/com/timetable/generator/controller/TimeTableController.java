@@ -38,9 +38,10 @@ public class TimeTableController {
         return htmlService.getContent(timetable);
     }
 
-    @GetMapping("/timetable/gettimetable")
-    public String getTimetable() {
-        // model.addAttribute("timetable", "10");
-        return "timetable"; 
+    @GetMapping("/timetable/{numberOfClasses}")
+    public List<List<List<TeacherSubjectsDTO>>> gettimetable(@PathVariable int numberOfClasses) {
+
+        return timeTableService.generateTimetables(numberOfClasses);
     }
+
 }

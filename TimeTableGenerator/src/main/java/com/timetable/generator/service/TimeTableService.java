@@ -51,12 +51,13 @@ public class TimeTableService {
 
             for (int day = 0; day < days; day++) {
                 List<TeacherSubjectsDTO> shuffledTeachers = new ArrayList<>(teachers);
-                Collections.shuffle(shuffledTeachers);
+                // Collections.shuffle(shuffledTeachers);
 
                 List<TeacherSubjectsDTO> dailySchedule = new ArrayList<>();
 
                 for (int period = 0; period < periods; period++) {
-                    TeacherSubjectsDTO teacher = findAvailableTeacher(shuffledTeachers, dailySchedule, i, day);
+                    TeacherSubjectsDTO teacher = findclasses(shuffledTeachers, dailySchedule, i, day,
+                            timetables);
 
                     if (teacher != null) {
                         dailySchedule.add(teacher);
@@ -74,8 +75,59 @@ public class TimeTableService {
         return timetables;
     }
 
+    public static TeacherSubjectsDTO findclasses(List<TeacherSubjectsDTO> teachers,
+            List<TeacherSubjectsDTO> dailySchedule, int currentClassIndex, int currentDay,
+            List<List<List<TeacherSubjectsDTO>>> timetables) {
+
+        if (timetables.size() != 0) {
+            for (int i = 0; i < currentClassIndex; i++) {
+                List<List<TeacherSubjectsDTO>> classes = timetables.get(i);
+                // for (int day = 0; day <= currentDay; day++) {
+                    List<TeacherSubjectsDTO> weekdays = classes.get(currentDay);
+                    if(dailySchedule.size()==0) {
+                        for (int j = 0; j < teachers.size(); j++) {
+                           if (!teachers.get(j).equals(weekdays.get(0))) {
+                             return teachers.get(j);
+                           } 
+                        } 
+
+                    }else {
+                    for (int period=0; period<dailySchedule.size();period++) {
+                        if(!dailySchedule.get(period).equals(weekdays.get(period))) {
+                            for(int j=0;j<teachers.size();j++) {
+                                if(!dailySchedule.contains(teachers.get(j))
+                                    && !teachers.get(j).equals(weekdays.get(period))) {
+                                    return teachers.get(j);
+                                }
+                            }
+                        }
+                        else {
+                            for(int j=0;j<teachers.size();j++) {
+                                if(!dailySchedule.contains(teachers.get(j))
+                                && !teachers.get(j).equals(weekdays.get(period))) {
+                                    return teachers.get(j);
+                                }
+                            }
+                        }
+                        
+
+                    }
+                }
+                // }
+
+            }
+        }
+        else 
+        return findAvailableTeacher(teachers,
+             dailySchedule,  currentClassIndex,  currentDay,
+             timetables);
+        
+        return null;
+    }
+
     private static TeacherSubjectsDTO findAvailableTeacher(List<TeacherSubjectsDTO> teachers,
-            List<TeacherSubjectsDTO> dailySchedule, int currentClassIndex, int currentDay) {
+            List<TeacherSubjectsDTO> dailySchedule, int currentClassIndex, int currentDay,
+            List<List<List<TeacherSubjectsDTO>>> timetables) {
         for (TeacherSubjectsDTO teacher : teachers) {
             // Check if the teacher is not already assigned in the current period for
             // another class on the same day
