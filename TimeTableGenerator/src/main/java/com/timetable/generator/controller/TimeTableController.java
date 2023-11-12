@@ -29,7 +29,7 @@ public class TimeTableController {
     }
     @GetMapping("/getsubject")
     public List<TeacherSubjectsDTO> getSubject() {
-        return timeTableService.getuniqueSubject();
+        return timeTableService.getallteachers();
     }
 
     @GetMapping("/gettimetable/{numberOfClasses}")

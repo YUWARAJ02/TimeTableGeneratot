@@ -23,7 +23,7 @@ public class TimeTableService {
         return teacherRepository.findBySubjectName(subjectName);
     }
 
-    public List<TeacherSubjectsDTO> getuniqueSubject() {
+    public List<TeacherSubjectsDTO> getallteachers() {
         List<Teacher> allTeachers = teacherRepository.findAll();
         List<String> noOfSubjects = new ArrayList<>();
         List<TeacherSubjectsDTO> handleSubjects = new ArrayList<>();
@@ -48,7 +48,7 @@ public class TimeTableService {
     }
 
     public List<List<List<TeacherSubjectsDTO>>> generatorNew(int noOfClasses) {
-        List<TeacherSubjectsDTO> teachers = getuniqueSubject();
+        List<TeacherSubjectsDTO> teachers = getallteachers();
         List<List<List<TeacherSubjectsDTO>>> timetables = new ArrayList<>();
 
         int days=6,periods=8;
@@ -106,8 +106,33 @@ public class TimeTableService {
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public List<List<List<TeacherSubjectsDTO>>> generateTimetables(int numberOfClasses) {
-        List<TeacherSubjectsDTO> teachers = getuniqueSubject();
+        List<TeacherSubjectsDTO> teachers = getallteachers();
 
         int days = 6; // Number of days
         int periods = 8; // Number of periods per day
