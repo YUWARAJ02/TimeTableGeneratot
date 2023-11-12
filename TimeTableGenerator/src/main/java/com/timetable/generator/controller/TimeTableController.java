@@ -34,14 +34,15 @@ public class TimeTableController {
 
     @GetMapping("/gettimetable/{numberOfClasses}")
     public String getTimetable(@PathVariable int numberOfClasses) {
-        List<List<List<TeacherSubjectsDTO>>> timetable = timeTableService.generateTimetables(numberOfClasses);
-        return htmlService.getContent(timetable);
+        // List<List<List<TeacherSubjectsDTO>>> timetable = timeTableService.generateTimetables(numberOfClasses);
+        return htmlService.getContent(timeTableService.generatorNew(numberOfClasses));
     }
 
     @GetMapping("/timetable/{numberOfClasses}")
     public List<List<List<TeacherSubjectsDTO>>> gettimetable(@PathVariable int numberOfClasses) {
 
-        return timeTableService.generateTimetables(numberOfClasses);
+        // return timeTableService.generateTimetables(numberOfClasses);
+        return timeTableService.generatorNew(numberOfClasses);
     }
 
 }

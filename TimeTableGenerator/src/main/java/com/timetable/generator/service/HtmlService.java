@@ -53,13 +53,17 @@ public class HtmlService {
                     TeacherSubjectsDTO teacher = dailySchedule.get(period);
 
                     // sb.append("<li><strong>Period ").append(period + 1).append(":</strong> ");
-                    sb.append("<td class=\""+teacher.getSubjects()+"\">");
-                    if (teacher != null && !teacher.getTeacherName().isEmpty()) {
-                        sb.append(teacher.getTeacherName()).append(" - ").append(teacher.getSubjects());
+                    
+                    if (teacher != null) {
+                        if(teacher.getTeacherName()!=null && teacher.getSubjects()!=null) {
+                        sb.append("<td class=\""+teacher.getSubjects()+"\">");
+                        sb.append(teacher.getTeacherName()).append(" - ").append(teacher.getSubjects()).append("</td>");
+                        }
+                        else sb.append("<td>No teacher are their to assign</td>");
                     } else {
-                        sb.append("No teacher assigned");
+                        sb.append("<td>No teacher assigned</td>");
                     }
-                    sb.append("</td>");
+                    
 
         //             sb.append("</li>");
                 }

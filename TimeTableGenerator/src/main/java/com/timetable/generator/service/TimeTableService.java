@@ -38,6 +38,74 @@ public class TimeTableService {
         return handleSubjects;
     }
 
+    public static List<TeacherSubjectsDTO> getpreviousperiodlist(List<List<List<TeacherSubjectsDTO>>> timetables,int days,int period) {
+        List<TeacherSubjectsDTO> periodCheck = new ArrayList<>();
+        for (int i = 0; i < timetables.size(); i++) {
+            List<List<TeacherSubjectsDTO>> dayWise = timetables.get(i);
+           periodCheck.add(dayWise.get(days).get(period));
+        }
+        return periodCheck;
+    }
+
+    public List<List<List<TeacherSubjectsDTO>>> generatorNew(int noOfClasses) {
+        List<TeacherSubjectsDTO> teachers = getuniqueSubject();
+        List<List<List<TeacherSubjectsDTO>>> timetables = new ArrayList<>();
+
+        int days=6,periods=8;
+
+        for (int cls = 0; cls < noOfClasses; cls++) {
+            
+            List<List<TeacherSubjectsDTO>> dayList = new ArrayList<>();
+            for (int day = 0; day < days; day++) {
+                List<TeacherSubjectsDTO> periodsList = new ArrayList<>();
+                for (int period = 0; period < periods; period++) {
+                    List<TeacherSubjectsDTO> previousperiodlist = getpreviousperiodlist(timetables, day, period);
+                    if (previousperiodlist!=null && previousperiodlist.size()!=0) {
+                        Collections.shuffle(teachers);
+                       TeacherSubjectsDTO uniqueTeacher = findUniqueElement(teachers, previousperiodlist);
+                       if(uniqueTeacher!=null) {
+                       if (periodsList.size()!=0) {
+                           TeacherSubjectsDTO uniqueTeacheramong3 = findUniqueElementInThreeLists(teachers,periodsList,previousperiodlist);
+                           if(uniqueTeacheramong3!=null) periodsList.add(uniqueTeacheramong3);
+                           else periodsList.add(new TeacherSubjectsDTO());
+                       }
+                       else periodsList.add(uniqueTeacher);} else periodsList.add(new TeacherSubjectsDTO());
+                    }
+                    else {
+                        Collections.shuffle(teachers);
+                        periodsList.add(teachers.get(period));
+                    }
+                }
+                dayList.add(periodsList);
+            }
+            timetables.add(dayList);
+
+        }
+        return timetables;
+    }
+
+    public static TeacherSubjectsDTO findUniqueElementInThreeLists(List<TeacherSubjectsDTO> list1, List<TeacherSubjectsDTO> list2, List<TeacherSubjectsDTO> list3) {
+        List<TeacherSubjectsDTO> combinedList = new ArrayList<>(list1);
+        combinedList.addAll(list2);
+        combinedList.addAll(list3);
+        // System.out.println("findUniqueElementInThreeLists"+combinedList);
+        return combinedList.stream()
+                .filter(element -> combinedList.indexOf(element) == combinedList.lastIndexOf(element))
+                .findFirst()
+                .orElse(null);
+    }
+    public static TeacherSubjectsDTO findUniqueElement(List<TeacherSubjectsDTO> list1, List<TeacherSubjectsDTO> list2) {
+        List<TeacherSubjectsDTO> combinedList = new ArrayList<>(list1);
+        combinedList.addAll(list2);
+        List<String> subjects = new ArrayList<>();
+        combinedList.stream().map(TeacherSubjectsDTO::getSubjects).forEach(subjects::add);
+        return combinedList.stream()
+                .filter(element -> subjects.indexOf(element.getSubjects()) == subjects.lastIndexOf(element.getSubjects()))
+                .findFirst()
+                .orElse(null);
+    }
+
+
     public List<List<List<TeacherSubjectsDTO>>> generateTimetables(int numberOfClasses) {
         List<TeacherSubjectsDTO> teachers = getuniqueSubject();
 
@@ -51,7 +119,7 @@ public class TimeTableService {
 
             for (int day = 0; day < days; day++) {
                 List<TeacherSubjectsDTO> shuffledTeachers = new ArrayList<>(teachers);
-                // Collections.shuffle(shuffledTeachers);
+                Collections.shuffle(shuffledTeachers);
 
                 List<TeacherSubjectsDTO> dailySchedule = new ArrayList<>();
 
