@@ -107,7 +107,7 @@ public class TimeTableService {
         List<String> subjects = new ArrayList<>();
         combinedList.stream().map(TeacherSubjectsDTO::getSubjects).forEach(subjects::add);
         return combinedList.stream()
-                .filter(element -> subjects.indexOf(element.getSubjects()) == subjects.lastIndexOf(element.getSubjects()))
+                .filter(element -> combinedList.indexOf(element) == combinedList.lastIndexOf(element))
                 .findFirst()
                 .orElse(null);
     }
