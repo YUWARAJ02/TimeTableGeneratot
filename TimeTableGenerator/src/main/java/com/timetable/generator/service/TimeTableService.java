@@ -67,7 +67,14 @@ public class TimeTableService {
                        if (periodsList.size()!=0) {
                            TeacherSubjectsDTO uniqueTeacheramong3 = findUniqueElementInThreeLists(teachers,periodsList,previousperiodlist);
                            if(uniqueTeacheramong3!=null) periodsList.add(uniqueTeacheramong3);
-                           else periodsList.add(new TeacherSubjectsDTO());
+                           else { 
+                            TeacherSubjectsDTO uniqueTeacher1 = findUniqueElement(periodsList, previousperiodlist);
+                            if (uniqueTeacher1!=null) {
+                                periodsList.add(uniqueTeacher1);
+                            } else {
+                                periodsList.add(new TeacherSubjectsDTO());
+                            }
+                           }
                        }
                        else periodsList.add(uniqueTeacher);} else periodsList.add(new TeacherSubjectsDTO());
                     }
